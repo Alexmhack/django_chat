@@ -120,3 +120,164 @@ npm run dev
 ```
 
 Locate to [localhost:8000](http://127.0.0.1:8000/)
+
+For more details on this project visit this [link](https://danidee10.github.io/2018/01/01/realtime-django-1.html)
+
+vue-cli also sets up hotreloading for us which really improves the developer’s 
+experience. As soon as you hit save after editing a component, the change is 
+immediately reflected in the browser.
+
+# Configure Vue Router
+Create two components inside **chatire-frontend/src/components** folder. One will we ```Chat.vue``` for showing the chat screen and the other is ```UserAuth.vue``` that will be shown to unauthenticated users for login and sign up.
+
+Edit the ```chatire-frontend/src/router/index.js``` file and add
+
+```
+import Vue from 'vue'
+import Router from 'vue-router'
+import Chat from '@/components/Chat'
+import UserAuth from '@/components/UserAuth'
+
+Vue.use(Router)
+
+const router = new Router({
+  routes: [
+    {
+      path: '/chats',
+      name: 'Chat',
+      component: Chat
+    },
+
+    {
+      path: '/auth',
+      name: 'UserAuth',
+      component: UserAuth
+    }
+  ]
+})
+
+router.beforeEach((to, from, next) => {
+  if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
+    next()
+  }
+  else {
+    next('/auth')
+  }
+})
+
+export default router
+```
+
+The beforeEach guard is called before a navigating to any route in our application.
+
+If a token is stored in the sessionStorage we allow the navigation to proceed by 
+calling next() else we redirect to the auth component.
+
+No matter the route a user navigates to in our application this function will check 
+if the user has an auth token and redirect them appropraitely.
+
+# Login / Signup Template
+Add the below piece of code in ```UseAuth.vue```
+
+```
+<template>
+  <div class="container">
+    <h1 class="text-center">Welcome to Chatire!</h1>
+    <div id="auth-container" class="row">
+      <div class="col-sm-4 offset-sm-4">
+        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="false">Sign In</a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+
+          <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signin-tab">
+            <form @submit.prevent="signUp">
+              <div class="form-group">
+                <input v-model="email" type="email" class="form-control" id="email" placeholder="Email Address" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <input v-model="username" type="text" class="form-control" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="toc" required>
+                  <label class="form-check-label" for="gridCheck">
+                    Accept terms and Conditions
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-block btn-primary">Sign up</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+            <form @submit.prevent="signIn">
+              <div class="form-group">
+                <input v-model="username" type="text" class="form-control" id="username" placeholder="Username" required>
+              </div>
+              <div class="form-group">
+                <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
+              </div>
+              <button type="submit" class="btn btn-block btn-primary">Sign in</button>
+            </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  const $ = window.jQuery // JQuery
+
+  export default {
+
+    data () {
+      return {
+        email: '', username: '', password: ''
+      }
+    }
+
+  }
+</script>
+
+<style scoped>
+  #auth-container {
+    margin-top: 50px;
+  }
+
+  .tab-content {
+    padding-top: 20px;
+  }
+</style>
+```
+
+In the above snippet we use ```v-model``` was uesd for two way binding of all input
+fields. This means that whatever is entered in the input fields can be accessed on
+javascript side using ```this.field_name```
+
+We also use ```@submit.prevent``` that listens form submitting and calls
+the specified functions (which will be implemented soon).
+
+Since we are using **bootstrap** we initialize ```$``` $ that points to the globally registered window.jQuery for using ```jquery``` instead of installing ```jquery``` from ```npm```
+
+Now we will use **jQuery AJAX** methods to communicate with **django server**
+
+Don’t forget to include bootstrap’s CSS and JavaScript in the main ```index.html``` 
+page which is located in **chatire-frontend** folder
+
+```
+# index.html file
+```
