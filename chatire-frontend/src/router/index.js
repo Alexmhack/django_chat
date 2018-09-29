@@ -6,7 +6,7 @@ import UserAuth from '@/components/UserAuth';
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/chats',
