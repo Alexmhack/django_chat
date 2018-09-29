@@ -15,10 +15,11 @@ const router = new Router({
     },
 
     {
-  ]	  path: '/auth',
+  	  path: '/auth',
   	  name: 'UserAuth',
   	  component: UserAuth
     }
+  ]
 })
 
 router.beforeEach((to, from, next) => {
