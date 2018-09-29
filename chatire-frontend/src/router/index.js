@@ -9,9 +9,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/chats',
+      name: 'Chat',
+      component: Chat
+    },
+
+    {
+  ]	  path: '/auth',
+  	  name: 'UserAuth',
+  	  component: UserAuth
     }
-  ]
 })
