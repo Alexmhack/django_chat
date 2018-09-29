@@ -20,3 +20,14 @@ export default new Router({
   	  component: UserAuth
     }
 })
+
+router.beforeEach((to, from, next) => {
+  if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
+    next();
+  }
+  else {
+    next('/auth');
+  }
+})
+
+export default router;
