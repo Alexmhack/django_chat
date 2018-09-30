@@ -73,6 +73,18 @@
     }
 
   }
+
+  methods: {
+    signUp() {
+      $.post("http://localhost:8000/auth/users/create/", this.$data, (data) => {
+        alert("Your account has been created. You will be Signed In automatically!")
+        this.signIn();
+      })
+      .fall((response) => {
+        alert(response.responseText);
+      })
+    }
+  }
 </script>
 
 <style scoped>
