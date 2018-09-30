@@ -21,3 +21,7 @@ class TrackableDateModel(models.Model):
 
 	class Meta:
 		abstract = True
+
+
+def _generate_unique_uri():
+	return str(uuid4()).replace('-', '')[:15]
