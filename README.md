@@ -370,4 +370,107 @@ resource at http://localhost:8000/auth/users/create/. (Reason: CORS header
 ‘Access-Control-Allow-Origin’ missing).[Learn More]
 ```
 
+# CORS
+Basically CORS is a mechanicsm that subverts the same origin policy. The same origin policy is what prevents a website on a different domain from making a XmlHttpRequest (Ajax) to another website/webservice. You can use CORS to weaken the security mechanicsm a little and tell the webserver that it’s safe to allow Ajax requests from a particular domain(s).
 
+This is happening due to our **AJAX** request being sent from ```localhost:8080/```
+to ```127.0.0.1:8000/``` In our case, even though both webservers are running on 
+localhost, due to the fact that they’re on different ports (8080 and 8000) they’re 
+seen as different domains.
+
+**For the domains to match the scheme (http or https), hostname (localhost) and the port must match.**
+
+So how do we enable CORS in our django application? There is third-party app we can 
+install to do that called [django-cors-headers](https://github.com/ottoyiu/django-cors-headers)
+
+```
+pip install django-cors-headers
+```
+
+add it your ```INSTALLED_APPS```
+
+```
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    # packages
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'corsheaders',
+]
+```
+
+Include the middleware, (Make sure it comes before
+django.middleware.common.CommonMiddleware)
+
+```
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+
+    # django-cors-headers middleware comes before CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
+
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+```
+
+Finally set ```CORS_ORIGIN_ALLOW_ALL = True``` in ```settings.py```
+
+Note that this enables CORS for all domains. This is fine for development but when 
+you’re in production you only want to allow certain domain(s) this can be controlled 
+with:
+
+Example:
+
+CORS_ORIGIN_WHITELIST = (
+    'google.com',
+    'hostname.example.com',
+    'localhost:8000',
+    '127.0.0.1:9000'
+)
+
+**Behnind the scenes, django-cors-headers uses a Middleware to add appropriate headers to each request that tells Django that the request is safe and it should be allowed.**
+
+**Try sign up by filling form and hit the button, you will get an alert saying your
+account has been created**
+
+Head over to [127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and after logging 
+in head to users and you find a new user has been created. In admin site head to
+**Token** there you will find a token has been created for the new user.
+
+# Logout
+If you haven't noticed I will remind you that we used ```sessionStorage``` which
+means that whenever a user opens a new browser window or restarts the browser he
+will be asked to sign in again in that window.
+
+Instead we can use ```localStorage``` which enables all these features in the browser
+window.
+
+Just replace ```sessionStorage``` to ```localStorage``` in ```UserAuth.vue``` file this way you can also implement a function that removes the ```authToken``` from storage using ```localStorage.removeItem('authToken')```
+
+**UserAuth.vue**
+```
+signIn () {
+        const credentials = {username: this.username, password: this.password}
+
+        $.post("http://localhost:8000/auth/token/create/", credentials, (data) => {
+          localStorage.setItem('authToken', data.auth_token)
+          localStorage.setItem('username', this.username)
+          this.router.push('/chats')
+        })
+        .fail((response) => {
+          alert(response.ResponseText)
+        })
+      }
+```
