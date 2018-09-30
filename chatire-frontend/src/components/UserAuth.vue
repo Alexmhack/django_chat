@@ -12,9 +12,10 @@
           </li>
         </ul>
 
+        <!-- sign up tab -->
         <div class="tab-content" id="myTabContent">
 
-          <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signin-tab">
+          <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
             <form @submit.prevent="signUp">
               <div class="form-group">
                 <input v-model="email" type="email" class="form-control" id="email" placeholder="Email Address" required>
@@ -38,7 +39,9 @@
               <button type="submit" class="btn btn-block btn-primary">Sign up</button>
             </form>
           </div>
+          <!-- /sign up tab -->
 
+          <!-- sign in tab -->
           <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
             <form @submit.prevent="signIn">
               <div class="form-group">
@@ -50,6 +53,7 @@
               <button type="submit" class="btn btn-block btn-primary">Sign in</button>
             </form>
           </div>
+          <!-- /sign in tab -->
           
         </div>
       </div>
