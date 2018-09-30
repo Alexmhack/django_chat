@@ -70,34 +70,35 @@
       return {
         email: '', username: '', password: ''
       }
-    }
-
-  }
-
-  methods: {
-    signUp() {
-      $.post("http://localhost:8000/auth/users/create/", this.$data, (data) => {
-        alert("Your account has been created. You will be Signed In automatically!")
-        this.signIn();
-      })
-      .fall((response) => {
-        alert(response.responseText);
-      })
     },
 
-    signIn() {
-      const credentials = {username: this.username, password: this.password}
+    methods: {
+      signUp () {
+        $.post("http://localhost:8000/auth/users/create/", this.$data, (data) => {
+          alert("Your account has been created. You will be Signed In automatically!")
+          this.signIn()
+        })
+        .fail((response) => {
+          alert(response.responseText)
+        })
+      },
 
-      $.post("http://localhost:8000/auth/token/create/", credentials, (data) => {
-        sessionStorage.setItem('authToken', data.auth_token);
-        sessionStorage.setItem('username', this.username);
-        this.router.push('/chats')
-      })
-      .fall((response) => {
-        alert(response.ResponseText);
-      })
+      signIn () {
+        const credentials = {username: this.username, password: this.password}
+
+        $.post("http://localhost:8000/auth/token/create/", credentials, (data) => {
+          sessionStorage.setItem('authToken', data.auth_token)
+          sessionStorage.setItem('username', this.username)
+          this.router.push('/chats')
+        })
+        .fail((response) => {
+          alert(response.ResponseText)
+        })
+      }
     }
+
   }
+
 </script>
 
 <style scoped>
