@@ -362,10 +362,12 @@ In **UserAuth.vue**
 ```methods``` contains both of the methods and send ajax post request to djoser 
 endpoint for creating a new user.
 
-Hit the **Sign In** button and you get an error saying
+Before hitting the **Sign In** button make sure that you run ```npm run dev``` and ```python manage.py runserver ```. You will get an error in the console...
 
 ```
 Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote 
 resource at http://localhost:8000/auth/users/create/. (Reason: CORS header 
 ‘Access-Control-Allow-Origin’ missing).[Learn More]
 ```
+
+
