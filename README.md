@@ -264,6 +264,9 @@ Add the below piece of code in ```UseAuth.vue```
 </style>
 ```
 
+I am using **Sublime Text 3** which has not pre-installed **Vue Markdown** so install
+**Vue Component** package in **Sublime Text**
+
 In the above snippet we use ```v-model``` was uesd for two way binding of all input
 fields. This means that whatever is entered in the input fields can be accessed on
 javascript side using ```this.field_name```
@@ -295,14 +298,74 @@ page which is located in **chatire-frontend** folder
   </head>
 
   <body>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
   </body>
 
 </html>
+```
+
+# Auth Token
+We have to let users login or sign up and then redirect them to the ```Chat``` route
+To achieve that we have to implement the ```signIn``` and ```signUp``` methods we 
+specified earlier.
+
+In **UserAuth.vue**
+```
+<script>
+  const $ = window.jQuery // JQuery
+
+  export default {
+
+    data () {
+      return {
+        email: '', username: '', password: ''
+      }
+    },
+
+    methods: {
+      signUp () {
+        $.post("http://localhost:8000/auth/users/create/", this.$data, (data) => {
+          alert("Your account has been created. You will be Signed In automatically!")
+          this.signIn()
+        })
+        .fail((response) => {
+          alert(response.responseText)
+        })
+      },
+
+      signIn () {
+        const credentials = {username: this.username, password: this.password}
+
+        $.post("http://localhost:8000/auth/token/create/", credentials, (data) => {
+          sessionStorage.setItem('authToken', data.auth_token)
+          sessionStorage.setItem('username', this.username)
+          this.router.push('/chats')
+        })
+        .fail((response) => {
+          alert(response.ResponseText)
+        })
+      }
+    }
+
+  }
+
+</script>
+```
+
+```methods``` contains both of the methods and send ajax post request to djoser 
+endpoint for creating a new user.
+
+Hit the **Sign In** button and you get an error saying
+
+```
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote 
+resource at http://localhost:8000/auth/users/create/. (Reason: CORS header 
+‘Access-Control-Allow-Origin’ missing).[Learn More]
 ```
