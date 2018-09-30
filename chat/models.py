@@ -47,3 +47,12 @@ class ChatSessionMessage(TrackableDateModel):
 	def to_json(self):
 		"""Deserialize message to JSON"""
 		return {'user': deserialize_user(self.user), 'message': self.message}
+
+
+class ChatSessionMember(TrackableDateModel):
+	"""Store all users in a chat session"""
+
+	chat_session = models.ForeignKey(
+		ChatSession, related_name='members', on_delete=models.PROTECT
+	)
+	user = models.ForeignKey(User, on_delete=models.PROTECT)
