@@ -138,3 +138,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
+
+
+# allow cors headers
+CORS_ORIGIN_ALLOW_ALL = True
