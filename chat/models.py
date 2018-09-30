@@ -33,3 +33,17 @@ class ChatSession(TrackableDateModel):
 
 	owner = models.ForeignKey(User, on_delete=models.PROTECT)
 	uri = models.URLField(default=_generate_unique_uri)
+
+
+class ChatSessionMessage(TrackableDateModel):
+	"""Store messages for a session"""
+
+	user = models.ForiegnKey(User, on_delete=models.PROTECT)
+	chat_session = models.ForeignKey(
+		ChatSession, related_name='messages', on_delete=models.PROTECT
+	)
+	message = models.TextField(max_length=2500)
+
+	def to_json(self):
+		"""Deserialize message to JSON"""
+		return {'user': deserialize_user(self.user), 'message': self.message}
