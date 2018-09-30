@@ -474,3 +474,36 @@ signIn () {
         })
       }
 ```
+
+# Chat Application With Django
+So far our project has used djoser for user authentication backend and then 
+connecting with frontend ```vue.js``` application to it.
+
+In this part we will create ```APIs``` using **django-rest-framework** for providing
+endpoints to start new chat sessions, join chat sessions, post new messages, and 
+fetch a chat session's history.
+
+1. When a user sends a message, this message would be forwarded to django through the API.
+
+2. After django has received the message, It would also be forwarded to RabbitMQ.
+
+3. RabbitMQ uses an exchange to broadcast the messages to multiple queues. The queues are communication channels that would eventually deliver the messages to the clients. The Workers are background processes that do the actual work of broadcasting and delivering messages.
+
+## Implementation
+
+In this part, our goal is to implement the API with django rest framework. The API would allow users start new chat sessions, join existing sessions and send messages. It would also allow us retrieve messages from a chat session.
+
+Let’s start a new django app called chat
+
+```
+python manage.py startapp chat
+```
+
+Add the new app to ```INSTALLED_APPS```
+
+Now we will create a model for our app. This model will store chat data like messages, chat sessions and associated users.
+
+**chat/models.py**
+```
+
+```
