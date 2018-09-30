@@ -87,8 +87,8 @@
         const credentials = {username: this.username, password: this.password}
 
         $.post("http://localhost:8000/auth/token/create/", credentials, (data) => {
-          sessionStorage.setItem('authToken', data.auth_token)
-          sessionStorage.setItem('username', this.username)
+          localStorage.setItem('authToken', data.auth_token)
+          localStorage.setItem('username', this.username)
           this.router.push('/chats')
         })
         .fail((response) => {
