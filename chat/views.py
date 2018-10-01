@@ -40,7 +40,7 @@ class ChatSessionView(APIView):
 				user=user, chat_session=chat_session
 			)
 
-		owner = deserializer_user(owner)
+		owner = deserialize_user(owner)
 		members = [
 			deserialize_user(chat_session.user)
 			for chat_session in chat_session.members.all()
