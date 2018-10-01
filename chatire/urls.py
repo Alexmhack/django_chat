@@ -10,5 +10,10 @@ urlpatterns = [
 urlpatterns += [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
+]
+
+
+# chat app urls
+urlpatterns += [
     path('api/', include('chat.urls')),
 ]
