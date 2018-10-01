@@ -71,3 +71,20 @@ class ChatSessionMessageView(APIView):
 			'id': chat_session.id, 'uri': chat_session.uri,
 			'messages': messages
 		})
+
+	def post(self, request, *args, **kwargs):
+		"""create a new message in a chat session."""
+		uri = kwargs['uri']
+		message = request.data['message']
+
+		user = request.user
+		chat_session = ChatSession.objects.get(uri=uri)
+
+		ChatSessionMessage.objects.create(
+			user=user, chat_session=chat_session, message=message
+		)
+
+		return Response({
+			'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
+			'user': deserialize_user(user)
+		})
