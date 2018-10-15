@@ -9,7 +9,7 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
-      path: '/chats',
+      path: '/chats/:uri?',
       name: 'Chat',
       component: Chat
     },
